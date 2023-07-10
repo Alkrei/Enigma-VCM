@@ -1,0 +1,144 @@
+ {
+     "hide_button":
+     {
+         "colours":
+         {
+             "normal_text": "#FFFFFF",
+             "hovered_text": "#FFFFFF",
+             "selected_text": "#FFFFFF",
+             "disabled_text": "#FFFFFF",
+             "active_text": "#595959"
+         },
+         "images":
+         {
+             "normal_image": {
+                 "path": "./graphics/Buttons/Hide_Button_inactive.png"
+
+             },
+             "hovered_image": {
+                 "path": "./graphics/Buttons/Hide_Button_active.png"
+
+             },
+             "selected_image": {
+                 "path": "./graphics/Buttons/Hide_Button_inactive.png"
+
+             },
+             "disabled_image": {
+                 "path": "./graphics/Buttons//Hide_Button_inactive.png"
+
+             }
+         }
+    },
+    "trash_button":
+     {
+         "colours":
+         {
+             "normal_text": "#FFFFFF",
+             "hovered_text": "#FFFFFF",
+             "selected_text": "#FFFFFF",
+             "disabled_text": "#FFFFFF",
+             "active_text": "#595959"
+         },
+         "images":
+         {
+             "normal_image": {
+                 "path": "./graphics/Buttons/Trash_Button_inactive.png"
+
+             },
+             "hovered_image": {
+                 "path": "./graphics/Buttons/Trash_Button_active.png"
+
+             },
+             "selected_image": {
+                 "path": "./graphics/Buttons/Trash_Button_inactive.png"
+
+             },
+             "disabled_image": {
+                 "path": "./graphics/Buttons/Trash_Button_inactive.png"
+
+             }
+         }
+    },
+     "copy_button":
+     {
+         "colours":
+         {
+             "normal_text": "#FFFFFF",
+             "hovered_text": "#FFFFFF",
+             "selected_text": "#FFFFFF",
+             "disabled_text": "#FFFFFF",
+             "active_text": "#595959"
+         },
+         "images":
+         {
+             "normal_image": {
+                 "path": "./graphics/Buttons/Copy_Button_inactive.png"
+
+             },
+             "hovered_image": {
+                 "path": "./graphics/Buttons/Copy_Button_active.png"
+
+             },
+             "selected_image": {
+                 "path": "./graphics/Buttons/Copy_Button_inactive.png"
+
+             },
+             "disabled_image": {
+                 "path": "./graphics/Buttons/Copy_Button_inactive.png"
+
+             }
+         }
+    },
+    "save_button":
+    {
+        "colours":
+        {
+            "normal_text": "#FFFFFF",
+            "hovered_text": "#FFFFFF",
+            "selected_text": "#FFFFFF",
+            "disabled_text": "#FFFFFF",
+            "active_text": "#595959"
+        },
+        "images":
+        {
+            "normal_image": {
+                "path": "./graphics/Buttons/Save_Button_inactive.png"
+            },
+            "hovered_image": {
+                "path": "./graphics/Buttons/Save_Button_active.png"
+            },
+            "selected_image": {
+                "path": "./graphics/Buttons/Save_Button_inactive.png"
+            },
+            "disabled_image": {
+                "path": "./graphics/Buttons/Save_Button_inactive.png"
+            }
+        }
+    },
+     "quite_button":
+    {
+        "colours":
+        {
+            "normal_text": "#FFFFFF",
+            "hovered_text": "#FFFFFF",
+            "selected_text": "#FFFFFF",
+            "disabled_text": "#FFFFFF",
+            "active_text": "#595959"
+        },
+        "images":
+        {
+            "normal_image": {
+                "path": "./graphics/Buttons/Quite_Button_inactive.png"
+            },
+            "hovered_image": {
+                "path": "./graphics/Buttons/Quite_Button_active.png"
+            },
+            "selected_image": {
+                "path": "./graphics/Buttons/Quite_Button_inactive.png"
+            },
+            "disabled_image": {
+                "path": "./graphics/Buttons/Quite_Button_inactive.png"
+            }
+        }
+    }
+}
