@@ -4,7 +4,6 @@ import os
 import pygame_gui
 import pygame_gui.data
 import string
-from tkinter import Tk
 from pygame_gui.core import ObjectID
 from pygame_gui.elements import UITextBox, UIButton
 from settings import *
@@ -44,8 +43,7 @@ class Enigma:
         self.d_2 = [9, 19, 23, 12, 4, 16, 22, 2, 15, 1, 20, 5, 17, 10, 21, 18, 25, 11, 0, 13, 7, 24, 14, 8, 3, 6]
         self.d_3 = [25, 9, 3, 5, 15, 6, 23, 20, 0, 2, 22, 1, 24, 18, 17, 10, 16, 8, 11, 19, 21, 14, 12, 7, 4, 13]
         self.ref_d = [(1, 22), (2, 16), (3, 21), (4, 14), (5, 24), (6, 23), (7, 20), (8, 18), (9, 17), (10, 15),
-                      (11, 25),
-                      (12, 19), (13, 26)]
+                      (11, 25), (12, 19), (13, 26)]
 
         self.text_box = UITextBox(relative_rect=pygame.Rect(660, 77, 600, 251),
                                   manager=self.manager,
@@ -110,12 +108,7 @@ class Enigma:
         return result
 
     def copy_func(self):
-        c = Tk()
-        c.withdraw()
-        c.clipboard_clear()
-        c.clipboard_append(self.cipher_text)
-        c.update()
-        c.destroy()
+        pass
 
     def backspace_func(self):
         if len(self.text_box.appended_text) != 0:
@@ -167,7 +160,7 @@ class Enigma:
         save_cycle = True
         while save_cycle:
             if not os.path.exists(f"{self.path}/cipher{i}.txt"):
-                with open(f"{self.path}/cipher{i}.txt", "w") as file_obj:
+                with open(f"{self.path}/cipher_{i}.txt", "w") as file_obj:
                     file_obj.write(self.cipher_text)
                     file_obj.close()
                     save_cycle = False

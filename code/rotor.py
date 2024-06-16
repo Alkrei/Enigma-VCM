@@ -30,8 +30,11 @@ class Rotor:
         self.remove = False
 
         while self.disk[0] != self.pos:
-            i = self.disk.pop(-1)
-            self.disk.insert(0, i)
+            if self.pos == 26:
+                break
+            else:
+                i = self.disk.pop(-1)
+                self.disk.insert(0, i)
 
     def draw(self, screen):
         self.animation()
@@ -64,7 +67,7 @@ class Rotor:
 
         if not reflection:
             index = self.alphabet.index(letter)
-            # print(f"Letter index {index}")
+
             result_letter = self.alphabet[self.disk[index]]
         else:
             index = self.alphabet.index(letter)
@@ -72,7 +75,6 @@ class Rotor:
                 if index == section:
                     result_letter = self.alphabet[self.disk.index(section)]
                     # print(self.alphabet.index(result_letter))
-
         # print(self.disk)
         return result_letter
 

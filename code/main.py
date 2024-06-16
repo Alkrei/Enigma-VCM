@@ -1,7 +1,5 @@
 import pygame
 import pygame_gui
-import win32gui
-import win32con
 import sys
 from pygame_gui.core import ObjectID
 from pygame_gui.elements import UIButton
@@ -14,14 +12,12 @@ from transition import FadeOutTransition
 pygame.init()
 
 screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
-print(screen.get_size())
+# print(screen.get_size())
 pygame.display.set_caption("Enigma VCM")
 pygame.display.set_icon(pygame.image.load('./graphics/Icon.png'))
 clock = pygame.time.Clock()
-hwnd = win32gui.GetForegroundWindow()
-win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
 
-title = pygame.transform.scale(pygame.image.load('./graphics/Main/1.0.png'), screen.get_size())
+title = pygame.transform.scale(pygame.image.load('./graphics/Main/1.1.png'), screen.get_size())
 image_active = pygame.image.load('./graphics/Buttons/Button_active.png')
 image_inactive = pygame.image.load('./graphics/Buttons/Button_inactive.png')
 
@@ -35,7 +31,7 @@ class MainMenu:
         self.enigma = Enigma(screen, self.enigma_settings.path, self.enigma_settings.rotors_poss)
 
         self.version = f2.render(f"Version-{VERSION}", False, WHITE)
-        self.by = f2.render(f"Created by Alkrip ", False, WHITE)
+        self.by = f2.render(f"Created by Alkrei ", False, WHITE)
         self.created = f2.render(f"_", False, WHITE)
 
         self.Start_button = UIButton(relative_rect=pygame.Rect((50, 75), (336, 72)),
@@ -80,8 +76,8 @@ class MainMenu:
     def re_transitioning(self):
         while not self.transition.transitioning:
             time_delta = clock.tick(FPS)
-            titleText = screen.blit(title, (0, 0))  # title is an image
-            titleText.center = ((1920 / 2), (1080 / 2))
+            title_text = screen.blit(title, (0, 0))  # title is an image
+            title_text.center = ((1920 / 2), (1080 / 2))
             self.render()
             self.manager.draw_ui(screen)
 
@@ -105,8 +101,8 @@ class MainMenu:
         time_delta = clock.tick(FPS)
         screen.fill(BLACK)
 
-        titleText = screen.blit(title, (0, 0))  # title is an image
-        titleText.center = ((1920 / 2), (1080 / 2))
+        title_text = screen.blit(title, (0, 0))  # title is an image
+        title_text.center = ((1920 / 2), (1080 / 2))
         self.render()
         self.manager.draw_ui(screen)
 
@@ -115,8 +111,6 @@ class MainMenu:
 
     def start(self):
         intro = True
-        pygame.mixer.music.load("./main.mp3")
-        # pygame.mixer.music.play(-1)
 
         while intro:
             for event in pygame.event.get():

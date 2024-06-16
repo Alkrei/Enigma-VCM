@@ -19,7 +19,7 @@ clock = pygame.time.Clock()
 class EnigmaSettings:
     def __init__(self, screen):
         self.screen = screen
-        self.surf = pygame.image.load('./graphics/Main/Settings.png')
+        self.surf = pygame.image.load('./graphics/Main/settings.png')
         self.message = f2.render("_If you need to use other lang. or symb. use ctrl-v_", False, WHITE)
         self.second_message = f2.render("_VCM will be restarted after save_", False, WHITE)
         self.message_pos = (70, 300)
