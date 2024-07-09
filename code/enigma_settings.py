@@ -29,6 +29,7 @@ class EnigmaSettings:
         self.rotors_poss_filename = "./json/rotors_poss.json"
         self.new_settings = False
 
+        # manager
         self.manager = pygame_gui.ui_manager.UIManager((self.screen.get_size()), './themes/enigma_settings.json')
         self.rotor_manager = pygame_gui.UIManager((screen.get_size()), './themes/settings_rotor.json')
         self.button_manager = pygame_gui.ui_manager.UIManager((self.screen.get_size()),
@@ -42,6 +43,8 @@ class EnigmaSettings:
                                      text="Quite",
                                      manager=self.button_manager,
                                      object_id=ObjectID(class_id="button"))
+
+        # rotors
         with open(self.rotors_poss_filename) as f:
             rotors_poss = json.load(f)
             self.rotors_poss = rotors_poss
@@ -53,21 +56,17 @@ class EnigmaSettings:
 
         self.username = getpass.getuser()
         self.type_os = platform.system()
+
+        # path
         try:
             with open(self.path_filename) as f:
                 path = json.load(f)
                 self.path = path
         except FileNotFoundError:
-            self.path = ""
-            """ if self.type_os == "Linux":
-                user_downloads_path = "Загрузки"
-                default_path_d = "/home/" + self.username + "/" + user_downloads_path + "/"
-                self.path = default_path_d
-            elif self.type_os == "Windows":
-                user_downloads_path = "Downloads"
-                default_path_d_win = r"C:/Users/" + self.username + r"/" + user_downloads_path + r"/"
-                self.path = default_path_d_win
-            else:"""
+            with open(self.path_filename, "w") as f:
+                self.path = "./"
+                json.dump(self.path, f)
+
         self.file_path = UITextEntryLine(relative_rect=pygame.Rect((50, 75), (841, 72)),
                                          manager=self.manager,
                                          object_id=ObjectID(class_id="text_entry_line"))
@@ -75,19 +74,10 @@ class EnigmaSettings:
             try:
                 self.file_path.set_text(self.path)
             except TypeError:
-                self.file_path.set_text("Not visible symbols")
-        elif self.file_path.text == "":
-            self.path = self.file_path.text
-            self.file_path.set_text("No Directory")
+                self.file_path.set_text("Dont worry, just not visible symbols")
         else:
-            try:
-                with open(self.path_filename) as f:
-                    path = json.load(f)
-                    self.path = path
-            except FileNotFoundError:
-                with open(self.path_filename, "w") as f:
-                    self.path = ""
-                    json.dump(self.path, f)
+            self.path = ""
+            self.file_path.set_text("No Directory")
 
     def s_rotors_draw(self):
         self.FirstRotor.draw(self.screen)
@@ -97,9 +87,8 @@ class EnigmaSettings:
     def check_save_button(self):
         if self.rotors_poss != self.base_rotors_poss:
             self.save_button.enable()
-        elif os.path.exists(
-                self.path) and self.file_path.text == self.path or self.file_path.text == "Default Downloads" \
-                or self.file_path.text == "No Directory":
+        elif not (not (os.path.exists(self.path) and self.file_path.text == self.path) and not (
+                self.file_path.text == "No Directory") and not (self.file_path.text == "Directory does not exist")):
             self.save_button.disable()
         else:
             self.save_button.enable()
@@ -123,7 +112,7 @@ class EnigmaSettings:
                     json.dump(self.path, f)
             self.file_path.set_text("No Directory")
         else:
-            print("Error")
+            self.file_path.set_text("Directory does not exist")
 
     def save_rotors_poss_func(self):
         with open(self.rotors_poss_filename, "w") as f:
@@ -230,5 +219,5 @@ class EnigmaSettings:
                 try:
                     self.manager.process_events(event)
                 except TypeError:
-                    self.file_path.set_text("Not visible symbols")
+                    self.file_path.set_text("Dont worry, just not visible symbols")
             self.draw()

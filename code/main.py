@@ -31,8 +31,9 @@ class MainMenu:
         self.enigma = Enigma(screen, self.enigma_settings.path, self.enigma_settings.rotors_poss)
 
         self.version = f2.render(f"Version-{VERSION}", False, WHITE)
-        self.by = f2.render(f"Created by Alkrei ", False, WHITE)
-        self.created = f2.render(f"_", False, WHITE)
+        self.by = f2.render(f"Created by {NAME} ", False, WHITE)
+        self.created = f2.render("10_07_2023", False, WHITE)
+        self.engine = f2.render(f"Engine: {ENGINE}", False, WHITE)
 
         self.Start_button = UIButton(relative_rect=pygame.Rect((50, 75), (336, 72)),
                                      text="Start",
@@ -69,8 +70,9 @@ class MainMenu:
         self.re_transitioning()
 
     def render(self):
-        screen.blit(self.by, (980, 850))
-        screen.blit(self.created, (980, 900))
+        screen.blit(self.by, (980, 800))
+        screen.blit(self.created, (980, 850))
+        screen.blit(self.engine, (980, 900))
         screen.blit(self.version, (980, 950))
 
     def re_transitioning(self):

@@ -1,8 +1,8 @@
 import pygame
-import sys
-import os
 import pygame_gui
 import pygame_gui.data
+import sys
+import os
 import string
 from pygame_gui.core import ObjectID
 from pygame_gui.elements import UITextBox, UIButton
@@ -156,16 +156,19 @@ class Enigma:
             self.text_box.append_html_text(self.cipher_text)
 
     def save_func(self):
-        i = 1
-        save_cycle = True
-        while save_cycle:
-            if not os.path.exists(f"{self.path}/cipher{i}.txt"):
-                with open(f"{self.path}/cipher_{i}.txt", "w") as file_obj:
-                    file_obj.write(self.cipher_text)
-                    file_obj.close()
-                    save_cycle = False
-            else:
-                i += 1
+        if self.path != "" and os.path.exists(self.path):
+            i = 1
+            save_cycle = True
+            while save_cycle:
+                if not os.path.exists(f"{self.path}/cipher_{i}.txt"):
+                    with open(f"{self.path}/cipher_{i}.txt", "w") as file_obj:
+                        file_obj.write(self.cipher_text)
+                        file_obj.close()
+                        save_cycle = False
+                else:
+                    i += 1
+        else:
+            print("pass")
 
     def draw_rotors(self):
         self.FirstRotor.draw(self.screen)
