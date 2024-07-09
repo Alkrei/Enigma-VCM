@@ -168,7 +168,7 @@ class Enigma:
                 else:
                     i += 1
         else:
-            print("pass")
+            pass
 
     def draw_rotors(self):
         self.FirstRotor.draw(self.screen)

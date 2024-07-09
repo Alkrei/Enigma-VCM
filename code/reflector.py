@@ -8,7 +8,6 @@ class Reflector:
         self.ABC = str(string.ascii_uppercase)
         self.abc = str(string.ascii_lowercase)
         self.alphabet = ''
-        print(self.ABC)
 
     def code(self, letter):
         result_letter = 0
