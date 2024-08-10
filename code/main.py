@@ -11,7 +11,7 @@ from transition import FadeOutTransition
 
 pygame.init()
 
-screen = pygame.display.set_mode((1920, 1080), pygame.RESIZABLE)
+screen = pygame.display.set_mode((1920, 1080), flags=pygame.SCALED | pygame.RESIZABLE)
 # print(screen.get_size())
 pygame.display.set_caption("Enigma VCM")
 pygame.display.set_icon(pygame.image.load('./graphics/Icon.png'))
