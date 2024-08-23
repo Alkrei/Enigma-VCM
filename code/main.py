@@ -1,5 +1,3 @@
-from importlib.metadata import version
-
 import pygame
 import sys
 from settings import *
