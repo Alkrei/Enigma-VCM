@@ -1,2 +1,2 @@
-pygame==2.5.0
+pygame==2.6.0
 copykitten~=1.2.0
