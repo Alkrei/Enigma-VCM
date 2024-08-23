@@ -158,6 +158,4 @@ class EnigmaSettings:
                     pygame.display.update()
                     clock.tick(FPS)
                 yield transition
-                yield self.path
-                yield self.rotors_poss
                 yield self.new_settings

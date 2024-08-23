@@ -45,8 +45,6 @@ class MainMenu:
         self.transitioning()
         output = self.EnigmaSettings.start(self.transition)
         self.transition = next(output)
-        output_path = next(output)
-        rotors_poss = next(output)
         new_settings = next(output)
         if new_settings:
             self.Enigma = Enigma(surface, screen, self.EnigmaSettings.path, self.EnigmaSettings.rotors_poss)
