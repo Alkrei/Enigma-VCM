@@ -8,6 +8,6 @@ PAPER = '#ede0d8'
 
 VERSION = "2.0"
 NAME = "Alkrei"
-ENGINE = "Pygame"
+ENGINE = "Pygame-ce"
 
 FPS = 60
