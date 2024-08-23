@@ -1,41 +1,37 @@
 import pygame
-import pygame_gui
-import pygame_gui.data
+import copykitten
 import sys
 import os
-import string
-from pygame_gui.core import ObjectID
-from pygame_gui.elements import UITextBox, UIButton
 from settings import *
 from fonts import f2
 from rotor import Rotor
 from reflector import Reflector
+from text_box import TextBox
+from buttons import Button
 from keyboard import Keyboard
-from lang import en_kb
+from lang import en_kb, en_ascii
 from transition import FadeOutTransition
 
 clock = pygame.time.Clock()
 
-
 class Enigma:
-    def __init__(self, screen, path, rotors_poss):
+    def __init__(self, surface, screen, path, rotors_poss):
+        self.surface = surface
         self.screen = screen
-        self.ascii = string.ascii_letters
         self.title = pygame.image.load('./graphics/Enigma/Enigma_VCM.png')
-        self.input_rect = pygame.Rect(660, 77, 600, 251)
-        self.manager = pygame_gui.ui_manager.UIManager((self.screen.get_size()), './themes/enigma.json')
-        self.button_manager = pygame_gui.ui_manager.UIManager((self.screen.get_size()), './themes/panel.json')
-        self.extra = (pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6,
-                      pygame.K_7, pygame.K_8, pygame.K_9, pygame.K_0)
+        self.quite = False
+
+        # text
+        self.ascii = en_ascii
         self.all_symbols = 0
         self.limit = 1000
         self.limit_color = BLACK
-        self.all_symbols_pos = (909, 439)
-        self.path = path
-
-        self.cipher_text = ""
+        self.all_symbols_pos = (909, 430)
         self.text = ""
 
+        self.path = path
+
+        # filling
         """self.d_1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 0]
         self.d_2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 0]
         self.d_3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 0]"""
@@ -45,48 +41,26 @@ class Enigma:
         self.ref_d = [(1, 22), (2, 16), (3, 21), (4, 14), (5, 24), (6, 23), (7, 20), (8, 18), (9, 17), (10, 15),
                       (11, 25), (12, 19), (13, 26)]
 
-        self.text_box = UITextBox(relative_rect=pygame.Rect(660, 77, 600, 251),
-                                  manager=self.manager,
-                                  html_text='',
-                                  object_id=ObjectID(class_id="text_box"))
-        self.hide_button = UIButton(relative_rect=pygame.Rect((1327, 95), (84, 84)),
-                                    manager=self.button_manager,
-                                    text='',
-                                    object_id=ObjectID(class_id="hide_button"))
-
-        self.trash_button = UIButton(relative_rect=pygame.Rect((1327, 226), (84, 84)),
-                                     manager=self.button_manager,
-                                     text='',
-                                     object_id=ObjectID(class_id="trash_button"))
-
-        self.copy_button = UIButton(relative_rect=pygame.Rect((1458, 95), (84, 84)),
-                                    manager=self.button_manager,
-                                    text='',
-                                    object_id=ObjectID(class_id="copy_button"))
-
-        self.save_button = UIButton(relative_rect=pygame.Rect((1458, 226), (84, 84)),
-                                    manager=self.button_manager,
-                                    text='',
-                                    object_id=ObjectID(class_id="save_button"))
-
-        self.quite_button = UIButton(relative_rect=pygame.Rect((100, 550), (84, 84)),
-                                     manager=self.button_manager,
-                                     text='',
-                                     object_id=ObjectID(class_id="quite_button"))
-
+        # buttons
+        self.HideButton = Button(1327, 95, 84, 84, './graphics/Buttons/Hide_Button_inactive.png',
+                                  './graphics/Buttons/Hide_Button_active.png', f2, action=lambda: self.hide_func())
+        self.TrashButton = Button(1327, 226, 84, 84, './graphics/Buttons/Trash_Button_inactive.png',
+                                  './graphics/Buttons/Trash_Button_active.png', f2, action=lambda: self.trash_func())
+        self.CopyButton = Button(1458, 95, 84, 84, './graphics/Buttons/Copy_Button_inactive.png',
+                                   './graphics/Buttons/Copy_Button_active.png', f2, action=lambda: self.copy_func())
+        self.SaveButton = Button(1458, 226, 84, 84, './graphics/Buttons/Save_Button_inactive.png',
+                                  './graphics/Buttons/Save_Button_active.png', f2, action=lambda: self.save_func())
+        self.QuiteButton = Button(100, 550, 84, 84, './graphics/Buttons/Quite_Button_inactive.png',
+                                  './graphics/Buttons/Quite_Button_active.png', f2, action=lambda: self.quite_func())
         self.hide_button_pressed = pygame.image.load("./graphics/Buttons/Hide_Button_pressed.png")
-        self.hide_button_activity = False
-        self.keyboard = Keyboard(en_kb, self.screen)
+
+        # Elements
+        self.Keyboard = Keyboard(en_kb, self.surface)
         self.FirstRotor = Rotor(rotors_poss[2], self.d_1, (390, 74))
         self.SecondRotor = Rotor(rotors_poss[1], self.d_2, (246, 74))
         self.ThirdRotor = Rotor(rotors_poss[0], self.d_3, (102, 74))
         self.Reflector = Reflector(self.ref_d)
-
-    def create_text_box(self):
-        self.text_box = UITextBox(relative_rect=pygame.Rect(660, 77, 600, 251),
-                                  manager=self.manager,
-                                  html_text='',
-                                  object_id=ObjectID(class_id="text_box"))
+        self.TextBox = TextBox(660, 77)
 
     def cipher(self, letter):
         self.FirstRotor.switch()
@@ -108,52 +82,29 @@ class Enigma:
         return result
 
     def copy_func(self):
-        pass
-
-    def backspace_func(self):
-        if len(self.text_box.appended_text) != 0:
-            removed = self.text_box.appended_text[-1]
-            if removed in string.ascii_letters:
-                self.FirstRotor.re_switch()
-                if self.FirstRotor.pos == 26:
-                    self.SecondRotor.re_switch()
-                if self.ThirdRotor.pos == 26:
-                    self.ThirdRotor.re_switch()
-        text = self.text_box.appended_text[:-1]
-        self.text_box.kill()
-        self.create_text_box()
-        self.text_box.append_html_text(text)
-        self.text = self.text[:-1]
-        self.cipher_text = self.cipher_text[:-1]
-        if self.all_symbols != 0:
-            self.all_symbols -= 1
+        text = ''
+        for line in self.TextBox.cipher_text:
+            text = text + line + '\n'
+        copykitten.copy(text)
 
     def trash_func(self):
-        for i in self.text_box.appended_text:
-            if len(self.text_box.appended_text) != 0:
-                if i in string.ascii_letters:
+        for i in self.text:
+            if len(self.text) != 0:
+                if i in self.ascii:
                     self.FirstRotor.re_switch()
                     if self.FirstRotor.pos == 26:
                         self.SecondRotor.re_switch()
                     if self.ThirdRotor.pos == 26:
                         self.ThirdRotor.re_switch()
         self.all_symbols = 0
-        self.text_box.kill()
-        self.create_text_box()
+        self.TextBox.trash()
         self.text = ""
-        self.cipher_text = ""
 
     def hide_func(self):
-        if not self.hide_button_activity:
-            self.hide_button_activity = True
-            self.text_box.kill()
-            self.create_text_box()
-            self.text_box.append_html_text(self.text)
-        else:
-            self.hide_button_activity = False
-            self.text_box.kill()
-            self.create_text_box()
-            self.text_box.append_html_text(self.cipher_text)
+        if not self.TextBox.hide_button_activity:
+            self.TextBox.hide_button_activity = True
+        elif self.TextBox.hide_button_activity:
+            self.TextBox.hide_button_activity = False
 
     def save_func(self):
         if self.path != "" and os.path.exists(self.path):
@@ -162,7 +113,8 @@ class Enigma:
             while save_cycle:
                 if not os.path.exists(f"{self.path}/cipher_{i}.txt"):
                     with open(f"{self.path}/cipher_{i}.txt", "w") as file_obj:
-                        file_obj.write(self.cipher_text)
+                        for line in self.TextBox.cipher_text:
+                            file_obj.write(line + '\n')
                         file_obj.close()
                         save_cycle = False
                 else:
@@ -170,44 +122,84 @@ class Enigma:
         else:
             pass
 
-    def draw_rotors(self):
-        self.FirstRotor.draw(self.screen)
-        self.SecondRotor.draw(self.screen)
-        self.ThirdRotor.draw(self.screen)
+    def quite_func(self):
+        self.quite = True
 
-    def draw(self):
-        time_delta = clock.tick(FPS)
-        self.screen.blit(self.title, (0, 0))  # title is an image
-        self.keyboard.draw()
-        self.draw_rotors()
-        all_symbols = f2.render(f"{self.all_symbols}/{self.limit}", False, self.limit_color)
-        self.screen.blit(all_symbols, self.all_symbols_pos)
-        self.manager.draw_ui(self.screen)
-        self.button_manager.draw_ui(self.screen)
-        if self.hide_button_activity:
-            self.screen.blit(self.hide_button_pressed, (self.hide_button.rect.x, self.hide_button.rect.y))
-        self.manager.update(time_delta)
-        self.button_manager.update(time_delta)
-        pygame.display.update()
+    def print_tab(self):
+        self.all_symbols += 4
+        self.TextBox.update_text("    ", "    ")
+        self.text = self.text + "    "
+
+    def print_text(self, event):
+        if event.text.lower() in self.ascii:
+            self.all_symbols += 1
+            result = self.cipher(event.text)
+            self.TextBox.update_text(event.text, result)
+            self.text = self.text + event.text
+            for button in self.Keyboard.all_buttons:
+                if button.ltr == result or button.ltr.lower() == result:
+                    button.light = True
+        else:
+            self.all_symbols += 1
+            self.TextBox.update_text(event.text, event.text)
+            self.text = self.text + event.text
+
+    def print_backspace(self):
+        if len(self.text) != 0:
+            removed = self.text[-1]
+            if removed in self.ascii:
+                self.FirstRotor.re_switch()
+                if self.FirstRotor.pos == 26:
+                    self.SecondRotor.re_switch()
+                if self.ThirdRotor.pos == 26:
+                    self.ThirdRotor.re_switch()
+        self.TextBox.backspace()
+        self.text = self.text[:-1]
+        if self.all_symbols != 0:
+            self.all_symbols -= 1
 
     def re_transition(self, trns):
+        self.quite = False
         while not trns.transitioning:
-            time_delta = clock.tick(FPS)
-            self.screen.blit(self.title, (0, 0))  # title is an image
-            self.keyboard.draw()
-            self.manager.draw_ui(self.screen)
-            self.button_manager.draw_ui(self.screen)
-            if self.hide_button_activity:
-                self.screen.blit(self.hide_button_pressed, (self.hide_button.rect.x, self.hide_button.rect.y))
+            self.surface.blit(self.title, (0, 0))  # title is an image
+            self.Keyboard.draw()
             self.draw_rotors()
+            self.draw_buttons()
+            self.TextBox.draw(self.surface)
             all_symbols = f2.render(f"{self.all_symbols}/{self.limit}", False, self.limit_color)
-            self.screen.blit(all_symbols, self.all_symbols_pos)
+            self.surface.blit(all_symbols, self.all_symbols_pos)
+            if self.TextBox.hide_button_activity:
+                self.surface.blit(self.hide_button_pressed, (self.HideButton.x, self.HideButton.y))
+            self.screen.blit(pygame.transform.scale(self.surface, self.screen.get_rect().size), (0, 0))
             trns.re_update()
             self.screen.blit(trns.image, (0, 0))
             pygame.time.wait(10)
-            self.manager.update(time_delta)
-            self.button_manager.update(time_delta)
             pygame.display.update()
+
+    def draw_rotors(self):
+        self.FirstRotor.draw(self.surface)
+        self.SecondRotor.draw(self.surface)
+        self.ThirdRotor.draw(self.surface)
+
+    def draw_buttons(self):
+        self.HideButton.button(self.surface, self.screen)
+        self.TrashButton.button(self.surface, self.screen)
+        self.CopyButton.button(self.surface, self.screen)
+        self.SaveButton.button(self.surface, self.screen)
+        self.QuiteButton.button(self.surface, self.screen)
+
+    def draw(self):
+        self.surface.blit(self.title, (0, 0))  # title is an image
+        self.Keyboard.draw()
+        self.draw_rotors()
+        self.draw_buttons()
+        self.TextBox.draw(self.surface)
+        all_symbols = f2.render(f"{self.all_symbols}/{self.limit}", False, self.limit_color)
+        self.surface.blit(all_symbols, self.all_symbols_pos)
+        if self.TextBox.hide_button_activity:
+            self.surface.blit(self.hide_button_pressed, (self.HideButton.x, self.HideButton.y))
+        self.screen.blit(pygame.transform.scale(self.surface, self.screen.get_rect().size), (0, 0))
+        pygame.display.update()
 
     def start(self, self_trns):
         play = True
@@ -217,75 +209,50 @@ class Enigma:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+                if event.type == pygame.TEXTINPUT:
+                    self.print_text(event)
+
                 if event.type == pygame.KEYDOWN:
-                    if self.all_symbols < self.limit:
-                        if pygame.key.name(
-                                event.key) in string.ascii_letters and event.unicode.lower() == pygame.key.name(
-                                event.key):
-                            self.all_symbols += 1
-                            result = self.cipher(event.unicode)
-                            if self.hide_button_activity:
-                                self.text_box.append_html_text(event.unicode)
-                            else:
-                                self.text_box.append_html_text(result)
-                            self.text = self.text + event.unicode
-                            self.cipher_text = self.cipher_text + result
-                            for button in self.keyboard.all_buttons:
-                                if button.ltr == result or button.ltr.lower() == result:
-                                    button.light = True
-                        elif event.key in self.extra:
-                            self.all_symbols += 1
-                            self.text_box.append_html_text(event.unicode)
-                            self.text = self.text + event.unicode
-                            self.cipher_text = self.cipher_text + event.unicode
-                        elif event.key == pygame.K_TAB:
-                            self.all_symbols += 4
-                            self.text_box.append_html_text("    ")
-                            self.text = self.text + "    "
-                            self.cipher_text = self.cipher_text + "    "
-                            # self.text_box.html_text = self.text_box.html_text + "    "
-                        elif event.key == pygame.K_SPACE:
-                            self.all_symbols += 1
-                            self.text_box.append_html_text(" ")
-                            self.text = self.text + " "
-                            self.cipher_text = self.cipher_text + " "
-                            # self.text_box.html_text = self.text_box.html_text + " "
                     if event.key == pygame.K_ESCAPE:
-                        trns = FadeOutTransition()
-                        while trns.transitioning:
-                            trns.update()
-                            self.screen.blit(trns.image, (0, 0))
-                            pygame.time.wait(30)
-                            pygame.display.update()
-                            clock.tick(FPS)
-                        return trns
+                        self.quite_func()
                     elif event.key == pygame.K_BACKSPACE:
-                        self.backspace_func()
+                        self.print_backspace()
+                    elif event.key == pygame.K_TAB:
+                        self.print_tab()
                     elif event.key == pygame.K_RETURN:
-                        print("Enter")
+                        self.TextBox.enter()
+                    elif event.key == pygame.K_UP:
+                        self.TextBox.y_change_event(5)
+                    elif event.key == pygame.K_DOWN:
+                        self.TextBox.y_change_event(-5)
+
                 if event.type == pygame.KEYUP:
-                    for button in self.keyboard.all_buttons:
+                    for button in self.Keyboard.all_buttons:
                         if button.light:
                             button.light = False
-                if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                    if event.ui_element == self.hide_button:
-                        self.hide_func()
-                    if event.ui_element == self.trash_button:
-                        self.trash_func()
-                    if event.ui_element == self.copy_button:
-                        self.copy_func()
-                    if event.ui_element == self.save_button:
-                        self.save_func()
-                    if event.ui_element == self.quite_button:
-                        trns = FadeOutTransition()
-                        while trns.transitioning:
-                            trns.update()
-                            self.screen.blit(trns.image, (0, 0))
-                            pygame.time.wait(30)
-                            pygame.display.update()
-                            clock.tick(FPS)
-                        return trns
+                    if event.key == pygame.K_UP:
+                        self.TextBox.y_change_event(0)
+                    elif event.key == pygame.K_DOWN:
+                        self.TextBox.y_change_event(0)
 
-                self.manager.process_events(event)
-                self.button_manager.process_events(event)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.TextBox.mouse_button_down(self.surface, self.screen)
+                else:
+                    self.TextBox.mouse(self.surface, self.screen)
+
+                if event.type == pygame.MOUSEBUTTONUP:
+                    self.TextBox.mouse_button_up()
+
+            self.TextBox.update(self.surface, self.screen)
             self.draw()
+            if self.quite:
+                trns = FadeOutTransition()
+                while trns.transitioning:
+                    trns.update()
+                    self.screen.blit(pygame.transform.scale(self.surface, self.screen.get_rect().size), (0, 0))
+                    self.screen.blit(trns.image, (0, 0))
+                    pygame.time.wait(30)
+                    pygame.display.update()
+                    clock.tick(FPS)
+                return trns

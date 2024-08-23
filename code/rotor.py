@@ -1,18 +1,17 @@
-import string
+import pygame
+from lang import en_ascii_lower, en_ascii_upper
 from fonts import f2
 from settings import *
-import pygame
-from pygame_gui.core import ObjectID
-from pygame_gui.elements import UIButton
+from buttons import Button
 
 
-class Rotor:
+class Rotor(object):
     def __init__(self, pos, disk, rect_pos):
         """Потом настройку можно рандомизировать"""
         self.disk = disk
         self.pos = pos
-        self.ABC = str(string.ascii_uppercase)
-        self.abc = str(string.ascii_lowercase)
+        self.ABC = en_ascii_upper
+        self.abc = en_ascii_lower
         self.alphabet = ''
 
         self.move_sprites = [pygame.image.load("./graphics/Rotor/Rotor1.png"),
@@ -25,7 +24,7 @@ class Rotor:
         self.num = f2.render(f"{self.pos}", False, BLACK)
         self.image = self.move_sprites[self.current_sprite]
         self.rect = self.image.get_rect(topleft=rect_pos)
-        self.num_pos = (self.rect.x + 23, self.rect.y + 112)
+        self.num_pos = (self.rect.x + 25, self.rect.y + 107)
         self.move = False
         self.remove = False
 
@@ -113,7 +112,7 @@ class Rotor:
 
 
 class SettingsRotor:
-    def __init__(self, rect_pos, manager, pos=1):
+    def __init__(self, rect_pos, pos=1):
         self.pos = pos
 
         self.move_sprites = [pygame.image.load("./graphics/Rotor/Rotor1.png"),
@@ -126,25 +125,24 @@ class SettingsRotor:
         self.num = f2.render(f"{self.pos}", False, BLACK)
         self.image = self.move_sprites[self.current_sprite]
         self.rect = self.image.get_rect(topleft=rect_pos)
-        self.num_pos = (self.rect.x + 23, self.rect.y + 112)
+        self.num_pos = (self.rect.x + 25, self.rect.y + 107)
         self.move = False
         self.remove = False
-        self.manager = manager
 
-        self.Up_Button = UIButton(relative_rect=pygame.Rect((self.rect.x + 8, self.rect.topleft[-1] - 32), (64, 64)),
-                                  manager=self.manager,
-                                  text='',
-                                  object_id=ObjectID(class_id="up_button"))
-        self.Down_Button = UIButton(
-                                  relative_rect=pygame.Rect((self.rect.x + 8, self.rect.bottomleft[-1] - 32), (64, 64)),
-                                  manager=self.manager,
-                                  text='',
-                                  object_id=ObjectID(class_id="down_button"))
+        # buttons
+        self.image_up_active = './graphics/Buttons/Up_Button_active.png'
+        self.image_up_inactive = './graphics/Buttons/Up_Button_inactive.png'
+        self.image_down_active = './graphics/Buttons/Down_Button_active.png'
+        self.image_down_inactive = './graphics/Buttons/Down_Button_inactive.png'
+        self.UpButton = Button(self.rect.x + 8, self.rect.topleft[-1] - 32, 64, 64, self.image_up_inactive, self.image_up_active, action=lambda: self.switch())
+        self.DownButton = Button(self.rect.x + 8, self.rect.bottomleft[-1] - 32, 64, 64, self.image_down_inactive, self.image_down_active, action=lambda: self.re_switch())
 
-    def draw(self, screen):
+    def draw(self, surface, screen):
         self.animation()
-        screen.blit(self.image, self.rect)
-        screen.blit(self.num, self.num_pos)
+        surface.blit(self.image, self.rect)
+        surface.blit(self.num, self.num_pos)
+        self.UpButton.button(surface, screen)
+        self.DownButton.button(surface, screen)
 
     def animation(self):
         if self.move:

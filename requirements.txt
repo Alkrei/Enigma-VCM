@@ -1,2 +1,2 @@
 pygame==2.5.0
-pygame-gui==0.6.9
+copykitten~=1.2.0
