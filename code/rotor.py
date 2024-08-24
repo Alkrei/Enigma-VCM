@@ -5,7 +5,7 @@ from settings import *
 from buttons import Button
 
 
-class Rotor(object):
+class Rotor:
     def __init__(self, pos, disk, rect_pos):
         """Потом настройку можно рандомизировать"""
         self.disk = disk

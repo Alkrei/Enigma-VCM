@@ -1,7 +1,8 @@
 import pygame
+from pygame.sprite import Sprite
 
 
-class FadeOutTransition(pygame.sprite.Sprite):
+class FadeOutTransition(Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.width, self.height = pygame.display.get_window_size()

@@ -1,9 +1,10 @@
 import pygame
+from pygame.sprite import Sprite
 from fonts import f1
 from settings import *
 
 
-class Button(pygame.sprite.Sprite):
+class Button(Sprite):
     def __init__(self, letter, pos):
         super().__init__()
         self.image = pygame.image.load("./graphics/Enigma/Key.png")

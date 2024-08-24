@@ -3,7 +3,7 @@ from settings import *
 import pygame
 
 
-class TextBox(object):
+class TextBox:
     def __init__(self, x, y):
         self.y_axis = 0
         self.change_y = 0
