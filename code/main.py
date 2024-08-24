@@ -78,6 +78,7 @@ class MainMenu:
 
     def transitioning(self):
         self.render_info()
+        self.transition = FadeOutTransition()
         while self.transition.transitioning:
             self.transition.update()
             screen.blit(pygame.transform.scale(surface, screen.get_rect().size), (0, 0))
